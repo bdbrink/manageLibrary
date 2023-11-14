@@ -1,6 +1,6 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
+#include <sqlite_modern_cpp.h>
 
 class Book {
 public:
@@ -38,17 +38,18 @@ public:
         }
     }
 
-    // Save the library to a file
-    void saveToFile(const std::string& filename) const {
-        std::ofstream file(filename);
-        if (file.is_open()) {
-            for (const auto& book : books) {
-                file << book.getTitle() << ',' << book.getAuthor() << ',' << book.getYear() << '\n';
-            }
-            std::cout << "Library saved to file: " << filename << std::endl;
-        } else {
-            std::cerr << "Unable to open file for writing: " << filename << std::endl;
+    // Save the library to an SQLite database
+    void saveToDatabase(const std::string& dbname) const {
+        sqlite::database db(dbname);
+
+        db << "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY, title TEXT, author TEXT, year INTEGER);";
+
+        for (const auto& book : books) {
+            db << "INSERT INTO books (title, author, year) VALUES (?, ?, ?);"
+               << book.getTitle() << book.getAuthor() << book.getYear();
         }
+
+        std::cout << "Library saved to SQLite database: " << dbname << std::endl;
     }
 
 private:
@@ -67,8 +68,8 @@ int main() {
     std::cout << "Books in the library:\n";
     library.displayBooks();
 
-    // Save the library to a file
-    library.saveToFile("library.txt");
+    // Save the library to an SQLite database
+    library.saveToDatabase("library.db");
 
     return 0;
 }
