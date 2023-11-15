@@ -52,6 +52,19 @@ public:
         std::cout << "Library saved to SQLite database: " << dbname << std::endl;
     }
 
+    // Load books from the SQLite database
+    void loadFromDatabase(const std::string& dbname) {
+        sqlite::database db(dbname);
+
+        books.clear();
+
+        db << "SELECT * FROM books;" >> [&](int id, std::string title, std::string author, int year) {
+            addBook(Book(std::move(title), std::move(author), year));
+        };
+
+        std::cout << "Library loaded from SQLite database: " << dbname << std::endl;
+    }
+
 private:
     std::vector<Book> books;
 };
@@ -61,15 +74,4 @@ int main() {
 
     // Add some books to the library
     library.addBook(Book("The Catcher in the Rye", "J.D. Salinger", 1951));
-    library.addBook(Book("To Kill a Mockingbird", "Harper Lee", 1960));
-    library.addBook(Book("1984", "George Orwell", 1949));
-
-    // Display all books in the library
-    std::cout << "Books in the library:\n";
-    library.displayBooks();
-
-    // Save the library to an SQLite database
-    library.saveToDatabase("library.db");
-
-    return 0;
-}
+    library.addBo
