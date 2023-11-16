@@ -76,6 +76,18 @@ public:
         }
     }
 
+    // Search for books based on title, author, or year in the SQLite database
+    void searchBooksInDatabase(const std::string& dbname, const std::string& keyword) const {
+        sqlite::database db(dbname);
+
+        db << "SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR CAST(year AS TEXT) LIKE ?;"
+            << "%" + keyword + "%" << "%" + keyword + "%" << "%" + keyword + "%" >> [&](int id, std::string title, std::string author, int year) {
+            Book book(std::move(title), std::move(author), year);
+            book.display();
+        };
+    }
+
+
 private:
     std::vector<Book> books;
 };
