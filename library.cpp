@@ -65,6 +65,17 @@ public:
         std::cout << "Library loaded from SQLite database: " << dbname << std::endl;
     }
 
+    // Search for books based on title, author, or year
+    void searchBooks(const std::string& keyword) const {
+        for (const auto& book : books) {
+            if (book.getTitle().find(keyword) != std::string::npos ||
+                book.getAuthor().find(keyword) != std::string::npos ||
+                std::to_string(book.getYear()).find(keyword) != std::string::npos) {
+                book.display();
+            }
+        }
+    }
+
 private:
     std::vector<Book> books;
 };
@@ -74,4 +85,13 @@ int main() {
 
     // Add some books to the library
     library.addBook(Book("The Catcher in the Rye", "J.D. Salinger", 1951));
-    library.addBo
+    library.addBook(Book("To Kill a Mockingbird", "Harper Lee", 1960));
+    library.addBook(Book("1984", "George Orwell", 1949));
+
+    // Search for books
+    std::cout << "Search Results:\n";
+    library.searchBooks("Harper");
+    library.searchBooks("1951");
+
+    return 0;
+}
