@@ -76,17 +76,11 @@ public:
         }
     }
 
-    // Search for books based on title, author, or year in the SQLite database
-    void searchBooksInDatabase(const std::string& dbname, const std::string& keyword) const {
-        sqlite::database db(dbname);
-
-        db << "SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR CAST(year AS TEXT) LIKE ?;"
-            << "%" + keyword + "%" << "%" + keyword + "%" << "%" + keyword + "%" >> [&](int id, std::string title, std::string author, int year) {
-            Book book(std::move(title), std::move(author), year);
-            book.display();
-        };
+    // Display a quick intro or summary of the library
+    void displayLibraryInfo() const {
+        std::cout << "Welcome to the Library!\n";
+        std::cout << "Number of Books: " << books.size() << "\n\n";
     }
-
 
 private:
     std::vector<Book> books;
@@ -100,10 +94,16 @@ int main() {
     library.addBook(Book("To Kill a Mockingbird", "Harper Lee", 1960));
     library.addBook(Book("1984", "George Orwell", 1949));
 
+    // Display library info
+    library.displayLibraryInfo();
+
+    // Display some books
+    std::cout << "All Books:\n";
+    library.displayBooks();
+
     // Search for books
     std::cout << "Search Results:\n";
     library.searchBooks("Harper");
-    library.searchBooks("1951");
 
     return 0;
 }
