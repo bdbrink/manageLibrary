@@ -105,5 +105,7 @@ int main() {
     std::cout << "Search Results:\n";
     library.searchBooks("Harper");
 
+    library.saveToDatabase()
+
     return 0;
 }
