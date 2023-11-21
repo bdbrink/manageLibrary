@@ -105,7 +105,8 @@ int main() {
     std::cout << "Search Results:\n";
     library.searchBooks("Harper");
 
-    library.saveToDatabase()
+    // need db name to save to
+    library.saveToDatabase(Book("1984", "George Orwell", 1949))
 
     return 0;
 }
